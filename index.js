@@ -34,9 +34,16 @@ const fileManager = new GoogleAIFileManager(process.env.GENAI_API_KEY);
 app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const manualPrompt = req.query.soru;
     const type = req.query.type || '1';
-    //1: soru cozdur, 2: sorudaki konuyu anlatmasini iste
 
-    const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 'Sorudaki konuyu anlatır mısın?';
+    // 1: soru cozdur
+    // 2: sorudaki konuyu anlatmasini iste(foto secerse caliscak)
+    // 3: belirtilen konuyu anlatmasini iste
+    // 4: test hazirlamasini iste cevap JSON seklinde gelir.
+
+    const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 
+                    type === '2' ? "Sorudaki konuyu anlatır mısın?" :
+                    type === '3' ? "Belirttiğim konuyu anlatır mısın?" :
+                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soruluk bir test hazırlar mısın bunlara JSON formatinda ihtiyacim var, soru şıklar cevap şeklinde olsun fazladan bir aciklama yapma' : 'Naber';
 
     if (!manualPrompt) {
         const uploadResponse = await fileManager.uploadFile(req.file.path, {
@@ -68,10 +75,21 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
 
         const result = await model.generateContent([
             {
-                text: manualPrompt
+                text: manualPrompt + prompt
             },
         ])
-        const final_result = result.response.text();
+        const raw = result.response.text();
+
+        
+        let newstr = "";
+        
+        for (let i = 0; i < raw.length; i++)
+            if (!(raw[i] == "\n" || raw[i] == "\r"))
+                newstr += raw[i];
+        console.log(newstr);
+        
+        
+        const final_result = raw.trim()
 
         res.status(200).json({ cevap: final_result });
     }
