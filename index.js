@@ -43,7 +43,7 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 
                     type === '2' ? "Sorudaki konuyu anlatır mısın?" :
                     type === '3' ? "Belirttiğim konuyu anlatır mısın?" :
-                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soruluk bir test hazırlar mısın bunlara JSON formatinda ihtiyacim var, soru şıklar cevap şeklinde olsun fazladan bir aciklama yapma' : 'Naber';
+                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soru hazırlar mısın lütfen soru numaralarını belirtme araya sadece virgül koy cevaplar şu formatta olsun {"soru":"Aşağıdakilerden hangisi bir siklik hidrokarbondur?","secenekler":["Metan","Etan","Propan","Sikloheksan","Benzen"],"cevap":"Sikloheksan"},' : 'Naber';
 
     if (!manualPrompt) {
         const uploadResponse = await fileManager.uploadFile(req.file.path, {
@@ -78,18 +78,9 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
                 text: manualPrompt + prompt
             },
         ])
-        const raw = result.response.text();
-
-        
-        let newstr = "";
-        
-        for (let i = 0; i < raw.length; i++)
-            if (!(raw[i] == "\n" || raw[i] == "\r"))
-                newstr += raw[i];
-        console.log(newstr);
-        
-        
-        const final_result = raw.trim()
+    
+        const final_result = result.response.text().replaceAll(/\n|\r/g,'').replaceAll('**', '');
+        console.log(final_result)
 
         res.status(200).json({ cevap: final_result });
     }
