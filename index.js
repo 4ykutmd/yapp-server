@@ -43,7 +43,7 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 
                     type === '2' ? "Sorudaki konuyu anlatır mısın?" :
                     type === '3' ? "Belirttiğim konuyu anlatır mısın?" :
-                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soru hazırlar mısın lütfen soru numaralarını belirtme araya sadece virgül koy cevaplar şu formatta olsun {"soru":"Aşağıdakilerden hangisi bir siklik hidrokarbondur?","secenekler":["Metan","Etan","Propan","Sikloheksan","Benzen"],"cevap":"Sikloheksan"},' : 'Naber';
+                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soru hazırlar mısın lütfen soru numaralarını belirtme araya sadece virgül koy, ve başta bir açıklama yapma, cevaplar şu formatta olsun {"soru":"Aşağıdakilerden hangisi bir siklik hidrokarbondur?","secenekler":["Metan","Etan","Propan","Sikloheksan","Benzen"],"cevap":"Sikloheksan"},' : 'Naber';
 
     if (!manualPrompt) {
         const uploadResponse = await fileManager.uploadFile(req.file.path, {
