@@ -34,6 +34,7 @@ const fileManager = new GoogleAIFileManager(process.env.GENAI_API_KEY);
 app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const manualPrompt = req.query.soru;
     const type = req.query.type || '1';
+    const number = req.query.number || '15';
 
     // 1: soru cozdur
     // 2: sorudaki konuyu anlatmasini iste(foto secerse caliscak)
@@ -43,7 +44,7 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 
                     type === '2' ? "Sorudaki konuyu anlatır mısın?" :
                     type === '3' ? "Belirttiğim konuyu anlatır mısın?" :
-                    type === '4' ? 'Bana belirttigim konu hakkında 5er şıktan oluşan 15 soru hazırlar mısın? Soru numaralarını belirtme, başta bir açıklama yapma. Format: {soru:string,secenekler:string[],cevap:string},' : 'Naber';
+                    type === '4' ? `Bana belirttigim konu hakkında 5er şıktan oluşan ${number} soru hazırlar mısın? Soru numaralarını belirtme, başta bir açıklama yapma. Format: {soru:string,secenekler:string[],cevap:string},` : 'Naber';
 
     if (!manualPrompt) {
         const uploadResponse = await fileManager.uploadFile(req.file.path, {
