@@ -95,6 +95,17 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     
 })
 
+app.get('/gecici', async (req, res) => {
+    const prompt = req.query.soru;
+    const result = await model.generateContent([
+        {
+            text: prompt
+        },
+    ])
+    const final_result = result.response.text()
+    res.status(200).json({ cevap: final_result });
+});
+
 app.listen(port, () => {
     console.log(`YAPP Server is listening on port ${port}`)
 })
