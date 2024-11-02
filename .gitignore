@@ -31,4 +31,8 @@ npm-debug.log
 
 .DS_Store
 
-uploads/
+# exclude everything
+uploads/*
+
+# exception to the rule
+!uploads/.gitkeep 

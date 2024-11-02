@@ -5,6 +5,8 @@ const multer = require('multer');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GENAI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const { GoogleAIFileManager } = require("@google/generative-ai/server");
+const fileManager = new GoogleAIFileManager(process.env.GENAI_API_KEY);
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -53,15 +55,19 @@ router.post('/', upload.single('file'), async (req, res) => {
             displayName: req.file.filename,
         });
         let result = await chat.sendMessage([{
-            text: manualPrompt,
-            fileData: {
-                mimeType: file.mimetype,
-                uri: uploadResponse.file.uri,
+            text: manualPrompt
+            }, {
+                fileData: {
+                    mimeType: file.mimetype,
+                    fileUri: uploadResponse.file.uri,
+                }
             }
-        }])
+        ])
 
         let final_result = result.response.text();
-        res.status(200).json({ cevap: final_result });
+        res.status(200)
+        .json({ cevap: final_result, file: {mimeType: file.mimetype, fileUri: uploadResponse.file.uri}, have_file: true });
+        return;
     }
 
     let result = await chat.sendMessage(manualPrompt);
