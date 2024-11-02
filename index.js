@@ -28,6 +28,10 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage });
 
+// for parsing multipart/form-data
+// app.use(upload.array()); 
+// app.use(express.static('public'));
+
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GENAI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
