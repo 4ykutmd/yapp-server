@@ -44,7 +44,9 @@ app.get('/api/soru-sor', upload.single('image') , async (req, res) => {
     const prompt = type === '1' ? 'Görseldeki soruyu çözer misin?' : 
                     type === '2' ? "Sorudaki konuyu anlatır mısın?" :
                     type === '3' ? "Belirttiğim konuyu anlatır mısın?" :
-                    type === '4' ? `Bana belirttigim konu hakkında 5er şıktan oluşan ${number} soru hazırlar mısın? Soru numaralarını belirtme, başta bir açıklama yapma. Format: {soru:string,secenekler:string[],cevap:string},` : 'Naber';
+                    type === '4' ? `Bana belirttigim konu hakkında 5er şıktan oluşan ${number} soru hazırlar mısın? Soru numaralarını belirtme, başta bir açıklama yapma. Format: {soru:string,secenekler:string[],cevap:string},` : 'Naber'
+                    type ==="5" ? "Bana belirttiğim konu hakkında 7 günlük bir ders planı hazırlar msısın? Başta bir açıklama yapma. Format: {gün:string, konu:string}"
+                    ;
 
     if (!manualPrompt) {
         const uploadResponse = await fileManager.uploadFile(req.file.path, {
