@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.GENAI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 const { GoogleAIFileManager } = require("@google/generative-ai/server");
 const fileManager = new GoogleAIFileManager(process.env.GENAI_API_KEY);
 
+const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/')
@@ -41,8 +42,10 @@ router.post('/', upload.single('file'), async (req, res) => {
     }
     const file = req.file;
 
-    if (hazirPrompt === '1' && !manualPrompt) 
+    if (hazirPrompt === '1' && !manualPrompt) {
         res.status(400).json({ error: 'Prompt type 1 requires a manual prompt' });
+        return;
+    }
 
     //console.log(history)
     const chat = model.startChat({
