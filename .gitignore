@@ -33,6 +33,7 @@ npm-debug.log
 
 # exclude everything
 uploads/*
+.local.env
 
 # exception to the rule
 !uploads/.gitkeep 
